@@ -65,28 +65,44 @@ public sealed class TrayManager : IDisposable
 
     private static Icon CreateTrayIcon(Color indicatorColor)
     {
+        Icon? baseIcon = null;
+        try
+        {
+            var uri = new Uri("pack://application:,,,/Resources/app.ico");
+            var streamInfo = System.Windows.Application.GetResourceStream(uri);
+            if (streamInfo != null)
+            {
+                using var stream = streamInfo.Stream;
+                baseIcon = new Icon(stream, new System.Drawing.Size(32, 32));
+            }
+        }
+        catch
+        {
+            // Fallback handled below
+        }
+
         using var bitmap = new Bitmap(32, 32);
         using (var g = Graphics.FromImage(bitmap))
         {
             g.SmoothingMode = SmoothingMode.AntiAlias;
             g.Clear(Color.Transparent);
 
-            // Outer dark badge
-            using var badgeBrush = new SolidBrush(Color.FromArgb(220, 24, 24, 28));
-            g.FillEllipse(badgeBrush, 2, 2, 28, 28);
+            if (baseIcon != null)
+            {
+                g.DrawIcon(baseIcon, new Rectangle(0, 0, 32, 32));
+                baseIcon.Dispose();
+            }
+            else
+            {
+                using var bgBrush = new SolidBrush(Color.FromArgb(24, 24, 28));
+                g.FillEllipse(bgBrush, 2, 2, 28, 28);
+            }
 
-            // Status ring
-            using var ringPen = new Pen(indicatorColor, 3f);
-            g.DrawEllipse(ringPen, 4, 4, 24, 24);
-
-            // Center mic capsule
-            using var micBrush = new SolidBrush(Color.White);
-            g.FillRoundedRectangle(micBrush, 13, 8, 6, 11, 3);
-
-            // Mic stand
-            using var standPen = new Pen(Color.White, 2f);
-            g.DrawArc(standPen, 10, 11, 12, 10, 0, 180);
-            g.DrawLine(standPen, 16, 21, 16, 24);
+            // Draw status pip in bottom-right corner
+            using var pipBrush = new SolidBrush(indicatorColor);
+            using var pipBorder = new Pen(Color.FromArgb(20, 20, 24), 2f);
+            g.FillEllipse(pipBrush, 20, 20, 10, 10);
+            g.DrawEllipse(pipBorder, 20, 20, 10, 10);
         }
 
         IntPtr hIcon = bitmap.GetHicon();
@@ -105,19 +121,5 @@ public sealed class TrayManager : IDisposable
         _notifyIcon.ContextMenuStrip?.Dispose();
         _notifyIcon.Icon?.Dispose();
         _notifyIcon.Dispose();
-    }
-}
-
-file static class GraphicsExtensions
-{
-    public static void FillRoundedRectangle(this Graphics g, Brush brush, int x, int y, int width, int height, int radius)
-    {
-        using var path = new GraphicsPath();
-        path.AddArc(x, y, radius * 2, radius * 2, 180, 90);
-        path.AddArc(x + width - (radius * 2), y, radius * 2, radius * 2, 270, 90);
-        path.AddArc(x + width - (radius * 2), y + height - (radius * 2), radius * 2, radius * 2, 0, 90);
-        path.AddArc(x, y + height - (radius * 2), radius * 2, radius * 2, 90, 90);
-        path.CloseFigure();
-        g.FillPath(brush, path);
     }
 }

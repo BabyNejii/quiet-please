@@ -7,6 +7,7 @@
         WindowStartupLocation="CenterScreen"
         Background="#121216"
         Foreground="#ECECF1"
+        Icon="Resources/app.png"
         FontFamily="Segoe UI Variable, Segoe UI, sans-serif">
 
     <Window.Resources>
