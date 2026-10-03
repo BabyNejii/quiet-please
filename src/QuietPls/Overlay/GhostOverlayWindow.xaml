@@ -1,0 +1,54 @@
+<Window x:Class="QuietPls.Overlay.GhostOverlayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="QuietPls Overlay"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        Topmost="True"
+        Focusable="False"
+        ShowActivated="False"
+        ResizeMode="NoResize">
+    <Grid x:Name="VignetteRoot" Opacity="0">
+        <!-- Top Glow -->
+        <Rectangle VerticalAlignment="Top" Height="80">
+            <Rectangle.Fill>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#E6FF1744" Offset="0.0" />
+                    <GradientStop Color="#00FF1744" Offset="1.0" />
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+
+        <!-- Bottom Glow -->
+        <Rectangle VerticalAlignment="Bottom" Height="80">
+            <Rectangle.Fill>
+                <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+                    <GradientStop Color="#E6FF1744" Offset="0.0" />
+                    <GradientStop Color="#00FF1744" Offset="1.0" />
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+
+        <!-- Left Glow -->
+        <Rectangle HorizontalAlignment="Left" Width="80">
+            <Rectangle.Fill>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop Color="#E6FF1744" Offset="0.0" />
+                    <GradientStop Color="#00FF1744" Offset="1.0" />
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+
+        <!-- Right Glow -->
+        <Rectangle HorizontalAlignment="Right" Width="80">
+            <Rectangle.Fill>
+                <LinearGradientBrush StartPoint="1,0" EndPoint="0,0">
+                    <GradientStop Color="#E6FF1744" Offset="0.0" />
+                    <GradientStop Color="#00FF1744" Offset="1.0" />
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Grid>
+</Window>

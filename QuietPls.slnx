@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/QuietPls.Core/QuietPls.Core.csproj" />
+    <Project Path="src/QuietPls/QuietPls.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/QuietPls.Tests/QuietPls.Tests.csproj" />
+  </Folder>
+</Solution>
