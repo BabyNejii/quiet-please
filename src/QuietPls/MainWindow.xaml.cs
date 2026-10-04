@@ -338,7 +338,7 @@ public partial class MainWindow : Window
         if (!_isExplicitExit)
         {
             e.Cancel = true;
-            WindowState = WindowState.Minimized;
+            Hide();
             return;
         }
 
