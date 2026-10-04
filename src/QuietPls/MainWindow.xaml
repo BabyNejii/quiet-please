@@ -160,10 +160,14 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="Level 1: Visual Pulse Delay" FontSize="13"/>
-                        <TextBlock Grid.Column="1" x:Name="WarningDelayLabel" Text="150 ms" FontWeight="SemiBold"/>
+                        <TextBlock Text="Level 1: Visual Pulse Delay" FontSize="13" VerticalAlignment="Center"/>
+                        <TextBox Grid.Column="1" x:Name="WarningDelayInput" Text="150 ms" Width="85"
+                                 Background="#121216" Foreground="#ECECF1" BorderBrush="#38384C"
+                                 BorderThickness="1" Padding="6,2" TextAlignment="Right" FontWeight="SemiBold"
+                                 KeyDown="WarningDelayInput_KeyDown" LostFocus="WarningDelayInput_LostFocus"
+                                 GotFocus="DelayInput_GotFocus"/>
                     </Grid>
-                    <Slider x:Name="WarningDelaySlider" Minimum="50" Maximum="400" Value="150" Margin="0,4,0,10"
+                    <Slider x:Name="WarningDelaySlider" Minimum="20" Maximum="1000" Value="150" Margin="0,4,0,10"
                             ValueChanged="WarningDelaySlider_ValueChanged"/>
 
                     <!-- Escalation Duration -->
@@ -172,10 +176,14 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="Level 2: Audio Chime Delay (Continued Yelling)" FontSize="13"/>
-                        <TextBlock Grid.Column="1" x:Name="EscalationDelayLabel" Text="1200 ms" FontWeight="SemiBold"/>
+                        <TextBlock Text="Level 2: Audio Chime Delay (Continued Yelling)" FontSize="13" VerticalAlignment="Center"/>
+                        <TextBox Grid.Column="1" x:Name="EscalationDelayInput" Text="1200 ms" Width="85"
+                                 Background="#121216" Foreground="#ECECF1" BorderBrush="#38384C"
+                                 BorderThickness="1" Padding="6,2" TextAlignment="Right" FontWeight="SemiBold"
+                                 KeyDown="EscalationDelayInput_KeyDown" LostFocus="EscalationDelayInput_LostFocus"
+                                 GotFocus="DelayInput_GotFocus"/>
                     </Grid>
-                    <Slider x:Name="EscalationDelaySlider" Minimum="600" Maximum="3000" Value="1200" Margin="0,4,0,0"
+                    <Slider x:Name="EscalationDelaySlider" Minimum="200" Maximum="5000" Value="1200" Margin="0,4,0,0"
                             ValueChanged="EscalationDelaySlider_ValueChanged"/>
                 </StackPanel>
             </Border>
@@ -183,13 +191,16 @@
             <!-- Notification Channels & Testing Card -->
             <Border Grid.Row="4" Style="{StaticResource SectionCard}">
                 <StackPanel>
-                    <TextBlock Text="NOTIFICATION CHANNELS" FontSize="11" FontWeight="Bold" Foreground="#8E8EA0" Margin="0,0,0,10"/>
+                    <TextBlock Text="NOTIFICATION CHANNELS &amp; STARTUP" FontSize="11" FontWeight="Bold" Foreground="#8E8EA0" Margin="0,0,0,10"/>
 
                     <CheckBox x:Name="VisualToggle" Content="Enable Screen Border Pulse (Visual)"
                               IsChecked="True" Checked="VisualToggle_Changed" Unchecked="VisualToggle_Changed"
                               Foreground="#ECECF1" Margin="0,0,0,8"/>
                     <CheckBox x:Name="AudioToggle" Content="Enable Headset Warning Chime (Audio)"
                               IsChecked="True" Checked="AudioToggle_Changed" Unchecked="AudioToggle_Changed"
+                              Foreground="#ECECF1" Margin="0,0,0,8"/>
+                    <CheckBox x:Name="StartMinimizedToggle" Content="Start Minimized to Tray (Silent Startup)"
+                              IsChecked="True" Checked="StartMinimizedToggle_Changed" Unchecked="StartMinimizedToggle_Changed"
                               Foreground="#ECECF1" Margin="0,0,0,14"/>
 
                     <Grid>

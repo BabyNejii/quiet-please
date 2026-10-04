@@ -42,13 +42,14 @@ public partial class MainWindow : Window
         ThresholdValueLabel.Text = $"{(int)ThresholdSlider.Value}%";
 
         WarningDelaySlider.Value = settings.WarningDurationMs;
-        WarningDelayLabel.Text = $"{settings.WarningDurationMs} ms";
+        WarningDelayInput.Text = $"{settings.WarningDurationMs} ms";
 
         EscalationDelaySlider.Value = settings.EscalationDurationMs;
-        EscalationDelayLabel.Text = $"{settings.EscalationDurationMs} ms";
+        EscalationDelayInput.Text = $"{settings.EscalationDurationMs} ms";
 
         VisualToggle.IsChecked = settings.VisualEnabled;
         AudioToggle.IsChecked = settings.AudioEnabled;
+        StartMinimizedToggle.IsChecked = settings.StartMinimized;
 
         PopulateDevices(settings.SelectedDeviceId);
     }
@@ -142,24 +143,90 @@ public partial class MainWindow : Window
         SaveCurrentSettings();
     }
 
+    private void DelayInput_GotFocus(object sender, RoutedEventArgs e)
+    {
+        if (sender is System.Windows.Controls.TextBox tb)
+        {
+            tb.Text = tb.Text.Replace(" ms", "").Trim();
+            tb.SelectAll();
+        }
+    }
+
     private void WarningDelaySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
-        if (WarningDelayLabel == null) return;
-        int val = (int)e.NewValue;
-        WarningDelayLabel.Text = $"{val} ms";
+        if (WarningDelayInput == null) return;
+        if (!WarningDelayInput.IsKeyboardFocused)
+        {
+            WarningDelayInput.Text = $"{(int)e.NewValue} ms";
+        }
+        SaveCurrentSettings();
+    }
+
+    private void WarningDelayInput_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (e.Key == System.Windows.Input.Key.Enter)
+        {
+            CommitWarningDelay();
+            System.Windows.Input.Keyboard.ClearFocus();
+        }
+    }
+
+    private void WarningDelayInput_LostFocus(object sender, RoutedEventArgs e)
+    {
+        CommitWarningDelay();
+    }
+
+    private void CommitWarningDelay()
+    {
+        string raw = WarningDelayInput.Text.Replace(" ms", "").Trim();
+        if (int.TryParse(raw, out int val))
+        {
+            val = Math.Clamp(val, (int)WarningDelaySlider.Minimum, (int)WarningDelaySlider.Maximum);
+            WarningDelaySlider.Value = val;
+        }
+        WarningDelayInput.Text = $"{(int)WarningDelaySlider.Value} ms";
         SaveCurrentSettings();
     }
 
     private void EscalationDelaySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
-        if (EscalationDelayLabel == null) return;
-        int val = (int)e.NewValue;
-        EscalationDelayLabel.Text = $"{val} ms";
+        if (EscalationDelayInput == null) return;
+        if (!EscalationDelayInput.IsKeyboardFocused)
+        {
+            EscalationDelayInput.Text = $"{(int)e.NewValue} ms";
+        }
+        SaveCurrentSettings();
+    }
+
+    private void EscalationDelayInput_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (e.Key == System.Windows.Input.Key.Enter)
+        {
+            CommitEscalationDelay();
+            System.Windows.Input.Keyboard.ClearFocus();
+        }
+    }
+
+    private void EscalationDelayInput_LostFocus(object sender, RoutedEventArgs e)
+    {
+        CommitEscalationDelay();
+    }
+
+    private void CommitEscalationDelay()
+    {
+        string raw = EscalationDelayInput.Text.Replace(" ms", "").Trim();
+        if (int.TryParse(raw, out int val))
+        {
+            val = Math.Clamp(val, (int)EscalationDelaySlider.Minimum, (int)EscalationDelaySlider.Maximum);
+            EscalationDelaySlider.Value = val;
+        }
+        EscalationDelayInput.Text = $"{(int)EscalationDelaySlider.Value} ms";
         SaveCurrentSettings();
     }
 
     private void VisualToggle_Changed(object sender, RoutedEventArgs e) => SaveCurrentSettings();
     private void AudioToggle_Changed(object sender, RoutedEventArgs e) => SaveCurrentSettings();
+    private void StartMinimizedToggle_Changed(object sender, RoutedEventArgs e) => SaveCurrentSettings();
 
     private void DeviceComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
     {
@@ -191,6 +258,7 @@ public partial class MainWindow : Window
             EscalationDurationMs = (int)EscalationDelaySlider.Value,
             VisualEnabled = VisualToggle.IsChecked == true,
             AudioEnabled = AudioToggle.IsChecked == true,
+            StartMinimized = StartMinimizedToggle.IsChecked == true,
             SelectedDeviceId = deviceId
         };
 
@@ -242,7 +310,7 @@ public partial class MainWindow : Window
 
     private void MinimizeToTray_Click(object sender, RoutedEventArgs e) => Hide();
 
-    private void ShowAndActivate()
+    public void ShowAndActivate()
     {
         Dispatcher.InvokeAsync(() =>
         {
@@ -270,7 +338,7 @@ public partial class MainWindow : Window
         if (!_isExplicitExit)
         {
             e.Cancel = true;
-            Hide();
+            WindowState = WindowState.Minimized;
             return;
         }
 

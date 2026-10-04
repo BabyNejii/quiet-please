@@ -9,6 +9,7 @@ public sealed record UserSettings
     public int EscalationDurationMs { get; init; } = 1200;
     public bool VisualEnabled { get; init; } = true;
     public bool AudioEnabled { get; init; } = true;
+    public bool StartMinimized { get; init; } = true;
     public string? SelectedDeviceId { get; init; }
 
     public ThresholdConfig ToThresholdConfig()
